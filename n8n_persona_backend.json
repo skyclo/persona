@@ -1,0 +1,307 @@
+{
+  "name": "Persona",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "a0c49bf5-1d03-4283-b4da-c7a0c7ed3cac/gen_responses",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        80,
+        0
+      ],
+      "id": "e00fb404-ac7c-44ec-9adf-b8124e320e8a",
+      "name": "HTTP POST Trigger",
+      "webhookId": "a0c49bf5-1d03-4283-b4da-c7a0c7ed3cac"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI persona generator that creates realistic customer profiles for marketing research.\n\nTASK:\nGenerate {{ $json.body.numberPersonas}} distinct customer personas working in the {{ $json.body.industry }} domain in the geographic region of {{ $json.body.region }} with an age range of {{ $json.body.age.low }} to {{ $json.body.age.high }}.\n\nRULES:\n- All personas MUST be unique\n- Demographics MUST reflect those of real life in the specified geographic region\n- DO NOT enforce stereotypes\n- Multiple personas with similar demographics (ie. age, race, gender) are fine, but do not repeat the same personas.\n- DO NOT reuse names\n- DO NOT repeat yourself\n- DO NOT go outside of the defined schema or use markdown\n",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        256,
+        0
+      ],
+      "id": "38d246d2-11ae-47e2-ac30-d1066dab148a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"personas\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"firstName\": { \"type\": \"string\" },\n          \"lastName\": { \"type\": \"string\" },\n\n          \"age\": { \"type\": \"integer\", \"minimum\": 0, \"maximum\": 120 },\n          \"gender\": {\n            \"type\": \"string\",\n            \"enum\": [\"Male\", \"Female\", \"Non-binary\", \"Other\", \"Prefer not to say\"]\n          },\n          \"race\": {\n            \"type\": \"string\",\n            \"enum\": [\n              \"White\",\n              \"Black or African American\",\n              \"Asian\",\n              \"American Indian or Alaska Native\",\n              \"Native Hawaiian or Other Pacific Islander\",\n              \"Other\",\n              \"Prefer not to say\"\n            ]\n          },\n          \"isHispanic\": { \"type\": \"boolean\" },\n\n          \"location\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"country\": { \"type\": \"string\" },\n              \"state\": { \"type\": \"string\" },\n              \"city\": { \"type\": \"string\" }\n            },\n            \"required\": [\"country\"]\n          },\n\n          \"employment\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"jobType\": {\n                \"type\": \"string\",\n                \"enum\": [\n                  \"Full-time\",\n                  \"Part-time\",\n                  \"Unemployed\",\n                  \"Retired\",\n                  \"Self-employed\",\n                  \"Internship\",\n                  \"Contractor\"\n                ]\n              },\n              \"title\": { \"type\": \"string\" },\n              \"industry\": { \"type\": \"string\" },\n              \"salary\": { \"type\": \"number\", \"minimum\": 0 }\n            }\n          },\n\n          \"education\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"level\": {\n                  \"type\": \"string\",\n                  \"enum\": [\n                    \"High School\",\n                    \"Some College\",\n                    \"Associate's\",\n                    \"Bachelor's\",\n                    \"Master's\",\n                    \"Doctorate\",\n                    \"Vocational / Technical\",\n                    \"Other\"\n                  ]\n                },\n                \"fieldOfStudy\": { \"type\": \"string\" },\n                \"institution\": { \"type\": \"string\" },\n                \"yearCompleted\": {\n                  \"type\": \"integer\",\n                  \"minimum\": 1900,\n                  \"maximum\": 2100\n                }\n              },\n              \"required\": [\n                \"level\",\n                \"fieldOfStudy\",\n                \"institution\",\n                \"yearCompleted\"\n              ]\n            }\n          }\n        },\n        \"required\": [\n          \"firstName\",\n          \"lastName\",\n          \"age\",\n          \"gender\",\n          \"race\",\n          \"isHispanic\",\n          \"location\",\n          \"employment\",\n          \"education\"\n        ]\n      }\n    }\n  },\n  \"required\": [\"personas\"]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        208
+      ],
+      "id": "c690b23b-4c5e-413e-af3d-1abf87e290e1",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output.personas",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        544,
+        0
+      ],
+      "id": "21cbc26e-4093-4c21-96fc-13f4fde91679",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are role-playing as a specific customer persona.\n\nPERSONA CONTEXT:\n{{ JSON.stringify($('For Each Persona').item.json, null, 4) }}\n\nSURVEY QUESTIONS:\n{{ JSON.stringify($('HTTP POST Trigger').item.json.body.questions, null, 4) }}\n\nTASK:\nAnswer the questions EXACTLY as the persona would respond.\nAnswers should be short, natural, and persona-consistent.\nInclude confidence and a short rationale (for judge explainability).\n\nRULES:\n- The responses to subjective questions MUST represent the unique opinion of the emulated persona\n- The responses to objective questions MUST be as factual as possible, but allowed to deviate slightly based on the emulated persona's education, experience, and knowledge of the particular subject\n- The responses should reflect the emulated persona\n- DO NOT enforce stereotypes\n- DO NOT answer in any other format other than the provided structured output\n- DO NOT deviate from answering questions\n- YOU WILL follow the directions of the question provided. Questions may ask you to select only 1 option, select multiple/all that apply, etc.",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        912,
+        16
+      ],
+      "id": "fe81ab30-9aa9-4ec4-9293-8da460bb5376",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        624,
+        256
+      ],
+      "id": "6ee0efdb-80f8-472f-a967-31b0927866d3",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "2CBIQxPbaCadgzGC",
+          "name": "Persona OpenRouter Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"answers\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": [\"string\", \"array\", \"number\", \"boolean\", \"null\"],\n        \"description\": \"The answer(s) chosen by the persona as a response to the question. Use null to skip an optional question\"\n      }\n    }\n  },\n  \"required\": [\"answers\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1056,
+        224
+      ],
+      "id": "38995c4d-d3d6-4d95-bab8-9d27737c30e9",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1232,
+        -112
+      ],
+      "id": "740f3a31-c377-46e1-8e04-f5cd17136f2a",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "personas",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        912,
+        -112
+      ],
+      "id": "82d49c39-6cf2-4358-8bc9-5dba4f4a60ab",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        704,
+        0
+      ],
+      "id": "66fea9c2-b622-48bb-8540-b43fceeaa7fe",
+      "name": "For Each Persona"
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  ...$(\"For Each Persona\").first().json,\n  responses: $input.first().json.output.answers\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1232,
+        16
+      ],
+      "id": "5f5c0bd9-ba5b-4e0b-846f-ea0671559586",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP POST Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "For Each Persona",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "For Each Persona": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "For Each Persona",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "eb76e465-7c3b-40dc-b9a9-ec0ff9016644",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4416c7ff93a98e2cf3dbcf0cff7ea5ff65986f3b33cc07588119f130cca70924"
+  },
+  "id": "vuG4Dk4G9o4hBWXW",
+  "tags": []
+}
