@@ -23,6 +23,7 @@ Persona uses a variety of modern technologies to deliver its features. These inc
 - TailwindCSS
 - JavaScript/TypeScript
 - Vite
+- Lucide Icons
 
 #### Backend
 
