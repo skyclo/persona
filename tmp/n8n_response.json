@@ -1,0 +1,181 @@
+[
+    {
+        "": [
+            {
+                "firstName": "Amelia",
+                "lastName": "Chen",
+                "age": 32,
+                "gender": "Female",
+                "race": "Asian",
+                "isHispanic": false,
+                "location": {
+                    "country": "Canada",
+                    "state": "Ontario",
+                    "city": "Toronto"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Software Engineer",
+                    "industry": "Technology",
+                    "salary": 95000
+                },
+                "education": [
+                    {
+                        "level": "Bachelor's",
+                        "fieldOfStudy": "Computer Science",
+                        "institution": "University of Waterloo",
+                        "yearCompleted": 2013
+                    }
+                ],
+                "responses": [
+                    "Yes, I am very familiar with business intelligence and have used it before",
+                    "Daily",
+                    8,
+                    "Yes",
+                    ["Automation", "Asking technical questions", "Data science analysis"],
+                    null
+                ]
+            },
+            {
+                "firstName": "Amelia",
+                "lastName": "Chen",
+                "age": 32,
+                "gender": "Female",
+                "race": "Asian",
+                "isHispanic": false,
+                "location": {
+                    "country": "Canada",
+                    "state": "Ontario",
+                    "city": "Toronto"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Software Engineer",
+                    "industry": "Technology",
+                    "salary": 95000
+                },
+                "education": [
+                    {
+                        "level": "Bachelor's",
+                        "fieldOfStudy": "Computer Science",
+                        "institution": "University of Waterloo",
+                        "yearCompleted": 2013
+                    }
+                ],
+                "responses": [
+                    "Yes, I am very familiar with business intelligence and have used it before",
+                    "Daily",
+                    "9",
+                    "Yes",
+                    ["Automation", "Asking technical questions", "Agentic programming"],
+                    "null"
+                ]
+            },
+            {
+                "firstName": "Amelia",
+                "lastName": "Chen",
+                "age": 32,
+                "gender": "Female",
+                "race": "Asian",
+                "isHispanic": false,
+                "location": {
+                    "country": "Canada",
+                    "state": "Ontario",
+                    "city": "Toronto"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Software Engineer",
+                    "industry": "Technology",
+                    "salary": 95000
+                },
+                "education": [
+                    {
+                        "level": "Bachelor's",
+                        "fieldOfStudy": "Computer Science",
+                        "institution": "University of Waterloo",
+                        "yearCompleted": 2013
+                    }
+                ],
+                "responses": [
+                    "Yes, I am very familiar with business intelligence and have used it before",
+                    "Daily",
+                    "9",
+                    "Yes",
+                    ["Automation", "Data science analysis", "Asking technical questions"],
+                    null
+                ]
+            },
+            {
+                "firstName": "Amelia",
+                "lastName": "Chen",
+                "age": 32,
+                "gender": "Female",
+                "race": "Asian",
+                "isHispanic": false,
+                "location": {
+                    "country": "Canada",
+                    "state": "Ontario",
+                    "city": "Toronto"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Software Engineer",
+                    "industry": "Technology",
+                    "salary": 95000
+                },
+                "education": [
+                    {
+                        "level": "Bachelor's",
+                        "fieldOfStudy": "Computer Science",
+                        "institution": "University of Waterloo",
+                        "yearCompleted": 2013
+                    }
+                ],
+                "responses": [
+                    "Yes, I am very familiar with business intelligence and have used it before",
+                    "Daily",
+                    8,
+                    "Yes",
+                    ["Automation", "Asking technical questions", "Agentic programming"],
+                    null
+                ]
+            },
+            {
+                "firstName": "Amelia",
+                "lastName": "Chen",
+                "age": 32,
+                "gender": "Female",
+                "race": "Asian",
+                "isHispanic": false,
+                "location": {
+                    "country": "Canada",
+                    "state": "Ontario",
+                    "city": "Toronto"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Software Engineer",
+                    "industry": "Technology",
+                    "salary": 95000
+                },
+                "education": [
+                    {
+                        "level": "Bachelor's",
+                        "fieldOfStudy": "Computer Science",
+                        "institution": "University of Waterloo",
+                        "yearCompleted": 2013
+                    }
+                ],
+                "responses": [
+                    "Yes, I am very familiar with business intelligence and have used it before",
+                    "Daily",
+                    8,
+                    "Yes",
+                    ["Automation", "Asking technical questions", "Agentic programming"],
+                    null
+                ]
+            }
+        ]
+    }
+]

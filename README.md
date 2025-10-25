@@ -1,5 +1,6 @@
 # Persona
-***AI-Powered Market Research and Customer Persona Simulation Platform***
+
+**_AI-Powered Market Research and Customer Persona Simulation Platform_**
 
 ### :rocket: Overview
 
@@ -13,19 +14,24 @@ Persona helps businesses and marketers rapidly validate ideas, understand custom
 - **Get the Full Picture:** Chat with your generated personas to understand their motivations, pain points, and decision-making processes.
 
 ### :jigsaw: Technical Architecture
+
 Persona uses a variety of modern technologies to deliver its features. These include
+
 #### Frontend
+
 - React Router v7
 - TailwindCSS
 - JavaScript/TypeScript
 - Vite
 
 #### Backend
+
 - Node.js
 - Cloudflare Pages
 - Cloudflare Workers
 
 #### Agentic GenAI
+
 - Google Gemini 2.5 Flash (Base LLM)
 - OpenRouter
 - n8n (Workflow Automation)
