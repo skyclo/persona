@@ -119,7 +119,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <div className="flex h-full max-h-screen min-h-screen w-full flex-col overflow-hidden bg-black text-white">
             <Navbar
                 args={{
-                    numberPersonas: 25,
+                    numberPersonas: 100,
                     industry: "anything",
                     region: "worldwide",
                     age: { low: 18, high: 60 },

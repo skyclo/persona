@@ -1,3 +1,5 @@
+![Persona Banner](./assets/banner_1200x800.png)
+
 # Persona
 
 **_AI-Powered Market Research and Customer Persona Simulation Platform_**

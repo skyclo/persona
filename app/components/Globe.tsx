@@ -216,81 +216,7 @@ export default function Globe({
                 const img = (tex as any).image
                 const seemsEmpty = !(img && img.width > 4 && img.height > 4)
                 if (seemsEmpty) {
-                    // try fallback image
-                    // eslint-disable-next-line no-console
-                    console.warn(
-                        "Primary world_map.png appears empty; attempting fallback world_map_modified.png"
-                    )
-                    textureLoader.load("/images/world_map_modified.png", alt => {
-                        try {
-                            ;(alt as any).encoding = (THREE as any).sRGBEncoding
-                        } catch (e) {}
-                        const img2 = (alt as any).image
-                        try {
-                            const w2 = img2.width,
-                                h2 = img2.height
-                            const canvas2 = document.createElement("canvas")
-                            canvas2.width = w2
-                            canvas2.height = h2
-                            const ctx2 = canvas2.getContext("2d")
-                            if (ctx2) {
-                                ctx2.drawImage(img2, 0, 0, w2, h2)
-                                const id2 = ctx2.getImageData(0, 0, w2, h2)
-                                const data2 = id2.data
-                                for (let i2 = 0; i2 < data2.length; i2 += 4) {
-                                    if (data2[i2 + 3] === 0) {
-                                        data2[i2] = 4
-                                        data2[i2 + 1] = 42
-                                        data2[i2 + 2] = 107
-                                        data2[i2 + 3] = 255
-                                    }
-                                }
-                                ctx2.putImageData(id2, 0, 0)
-                                const newTex2 = new THREE.CanvasTexture(canvas2)
-                                try {
-                                    ;(newTex2 as any).encoding = (THREE as any).sRGBEncoding
-                                } catch (e) {}
-                                newTex2.flipY = true
-                                try {
-                                    ;(newTex2 as any).format = (THREE as any).RGBAFormat
-                                } catch (e) {}
-                                try {
-                                    newTex2.anisotropy = (renderer as any).capabilities
-                                        ?.getMaxAnisotropy
-                                        ? (renderer as any).capabilities.getMaxAnisotropy()
-                                        : 1
-                                } catch (e) {}
-                                newTex2.needsUpdate = true
-                                if (globeMat.map) globeMat.map.dispose()
-                                globeMat.map = newTex2
-                                ;(globeMat as any).premultipliedAlpha = true
-                                globeMat.color.set(0xffffff)
-                                globeMat.needsUpdate = true
-                                loadedMapRef.current = newTex2
-                                setLoadedInfo({ loaded: true, width: w2, height: h2 })
-                                return
-                            }
-                        } catch (e) {
-                            // fallback to raw alt
-                        }
-                        alt.flipY = true
-                        try {
-                            ;(alt as any).format = (THREE as any).RGBAFormat
-                        } catch (e) {}
-                        alt.needsUpdate = true
-                        if (globeMat.map) globeMat.map.dispose()
-                        globeMat.map = alt
-                        ;(globeMat as any).premultipliedAlpha = true
-                        globeMat.color.set(0xffffff)
-                        globeMat.needsUpdate = true
-                        loadedMapRef.current = alt
-                        const imgAlt = (alt as any).image
-                        setLoadedInfo({
-                            loaded: true,
-                            width: imgAlt?.width || 0,
-                            height: imgAlt?.height || 0,
-                        })
-                    })
+                    throw new Error("Loaded texture appears empty")
                 } else {
                     // assign primary after processing so fully-transparent pixels become deep blue
                     const img = (tex as any).image
@@ -459,8 +385,10 @@ export default function Globe({
             // the lit area on the texture stays consistent with the globe's orientation
             try {
                 const rotated = sunVec.clone()
-                // rotate around Y by the globe rotation so sun appears to move relative to globe
+                // rotate around Y (yaw) then X (pitch) by the globe rotation so sun appears
+                // to move consistently with both horizontal and vertical user rotation
                 rotated.applyAxisAngle(new THREE.Vector3(0, 1, 0), globe.rotation.y)
+                rotated.applyAxisAngle(new THREE.Vector3(1, 0, 0), globe.rotation.x)
                 dir.position.copy(rotated.multiplyScalar(100))
             } catch (e) {
                 dir.position.copy(sunVec.multiplyScalar(100))
@@ -479,7 +407,9 @@ export default function Globe({
             // update shader uniforms for atmosphere and karman line
             try {
                 const sd = sunVec.clone()
+                // rotate sun direction by both yaw and pitch so shader lighting matches globe orientation
                 sd.applyAxisAngle(new THREE.Vector3(0, 1, 0), globe.rotation.y)
+                sd.applyAxisAngle(new THREE.Vector3(1, 0, 0), globe.rotation.x)
                 if (atmosphereMat && (atmosphereMat as any).uniforms) {
                     ;(atmosphereMat as any).uniforms.sunDir.value.copy(sd).normalize()
                     ;(atmosphereMat as any).uniforms.sunPower.value = Math.max(0.0, sd.y)
@@ -507,6 +437,7 @@ export default function Globe({
         // Interaction
         let isDragging = false
         let previousMouseX = 0
+        let previousMouseY = 0
         let pointerDownPos: { x: number; y: number } | null = null
         let pointerMoved = false
 
@@ -517,6 +448,7 @@ export default function Globe({
             // pause auto-rotation while dragging; preserve paused state in isPausedRef
             autoRotateRef.current = false
             previousMouseX = e.clientX
+            previousMouseY = e.clientY
         }
         const onPointerUp = () => {
             isDragging = false
@@ -536,9 +468,31 @@ export default function Globe({
                 if (dx > 4 || dy > 4) pointerMoved = true
             }
             const deltaX = e.clientX - previousMouseX
+            const deltaY = e.clientY - previousMouseY
             previousMouseX = e.clientX
-            globe.rotation.y += deltaX * 0.005
-            stars.rotation.y += deltaX * 0.002 // parallax
+            previousMouseY = e.clientY
+
+            // yaw (around Y) and pitch (around X)
+            const yawFactor = 0.005
+            const pitchFactor = 0.003
+
+            globe.rotation.y += deltaX * yawFactor
+            globe.rotation.x += deltaY * pitchFactor
+            // clamp pitch to avoid flipping over
+            const maxPitch = Math.PI / 2 - 0.05
+            globe.rotation.x = Math.max(-maxPitch, Math.min(maxPitch, globe.rotation.x))
+
+            // keep atmosphere and karman line in sync with globe orientation
+            try {
+                atmosphere.rotation.y += deltaX * yawFactor
+                karmanLine.rotation.y += deltaX * yawFactor
+                atmosphere.rotation.x += deltaY * pitchFactor
+                karmanLine.rotation.x += deltaY * pitchFactor
+            } catch (e) {}
+
+            // slight parallax for stars
+            stars.rotation.y += deltaX * 0.002
+            stars.rotation.x += deltaY * 0.0008
         }
 
         renderer.domElement.addEventListener("pointerdown", onPointerDown)
