@@ -1,5 +1,5 @@
 {
-    "numberPersonas": 5,
+    "numberPersonas": 25,
     "industry": "anything",
     "region": "worldwide",
     "age": { "low": 18, "high": 60 },
@@ -38,10 +38,9 @@
         },
         {
             "required": true,
-            "type": "multiple",
+            "type": "binary",
             "content": "Do you use AI at work?",
-            "maxSelection": 1,
-            "choices": ["Yes", "No"]
+            "maxSelection": 1
         },
         {
             "required": false,

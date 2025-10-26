@@ -1,6 +1,6 @@
 [
     {
-        "": [
+        "results": [
             {
                 "firstName": "Amelia",
                 "lastName": "Chen",
@@ -24,156 +24,850 @@
                         "level": "Bachelor's",
                         "fieldOfStudy": "Computer Science",
                         "institution": "University of Waterloo",
-                        "yearCompleted": 2013
+                        "yearCompleted": 2015
                     }
                 ],
-                "responses": [
+                "response": [
                     "Yes, I am very familiar with business intelligence and have used it before",
                     "Daily",
                     8,
                     "Yes",
-                    ["Automation", "Asking technical questions", "Data science analysis"],
+                    ["Automation", "Asking technical questions", "Agentic programming"],
                     null
                 ]
             },
             {
-                "firstName": "Amelia",
-                "lastName": "Chen",
-                "age": 32,
-                "gender": "Female",
-                "race": "Asian",
-                "isHispanic": false,
+                "firstName": "Mateo",
+                "lastName": "Garcia",
+                "age": 28,
+                "gender": "Male",
+                "race": "White",
+                "isHispanic": true,
                 "location": {
-                    "country": "Canada",
-                    "state": "Ontario",
-                    "city": "Toronto"
+                    "country": "Spain",
+                    "city": "Barcelona"
                 },
                 "employment": {
                     "jobType": "Full-time",
-                    "title": "Software Engineer",
-                    "industry": "Technology",
-                    "salary": 95000
+                    "title": "Marketing Specialist",
+                    "industry": "Advertising",
+                    "salary": 40000
                 },
                 "education": [
                     {
                         "level": "Bachelor's",
-                        "fieldOfStudy": "Computer Science",
-                        "institution": "University of Waterloo",
-                        "yearCompleted": 2013
+                        "fieldOfStudy": "Marketing",
+                        "institution": "University of Barcelona",
+                        "yearCompleted": 2018
                     }
                 ],
-                "responses": [
-                    "Yes, I am very familiar with business intelligence and have used it before",
-                    "Daily",
-                    "9",
+                "response": [
+                    "Yes, I am familiar with business intelligence but I have not used it before",
+                    "Once or twice a week",
+                    7,
                     "Yes",
-                    ["Automation", "Asking technical questions", "Agentic programming"],
+                    [
+                        "Automation",
+                        "Asking non-technical questions",
+                        "Asking company-relevant questions"
+                    ],
                     "null"
                 ]
             },
             {
-                "firstName": "Amelia",
-                "lastName": "Chen",
-                "age": 32,
+                "firstName": "Ananya",
+                "lastName": "Sharma",
+                "age": 35,
                 "gender": "Female",
                 "race": "Asian",
                 "isHispanic": false,
                 "location": {
-                    "country": "Canada",
-                    "state": "Ontario",
-                    "city": "Toronto"
+                    "country": "India",
+                    "city": "Mumbai"
                 },
                 "employment": {
                     "jobType": "Full-time",
-                    "title": "Software Engineer",
-                    "industry": "Technology",
-                    "salary": 95000
+                    "title": "Financial Analyst",
+                    "industry": "Finance",
+                    "salary": 1200000
                 },
                 "education": [
                     {
-                        "level": "Bachelor's",
-                        "fieldOfStudy": "Computer Science",
-                        "institution": "University of Waterloo",
+                        "level": "Master's",
+                        "fieldOfStudy": "Business Administration",
+                        "institution": "Indian Institute of Management Bangalore",
                         "yearCompleted": 2013
                     }
                 ],
-                "responses": [
+                "response": [
                     "Yes, I am very familiar with business intelligence and have used it before",
                     "Daily",
                     "9",
                     "Yes",
                     ["Automation", "Data science analysis", "Asking technical questions"],
-                    null
+                    "null"
                 ]
             },
             {
-                "firstName": "Amelia",
-                "lastName": "Chen",
-                "age": 32,
-                "gender": "Female",
-                "race": "Asian",
+                "firstName": "David",
+                "lastName": "Wagner",
+                "age": 48,
+                "gender": "Male",
+                "race": "White",
                 "isHispanic": false,
                 "location": {
-                    "country": "Canada",
-                    "state": "Ontario",
-                    "city": "Toronto"
+                    "country": "Germany",
+                    "city": "Berlin"
                 },
                 "employment": {
                     "jobType": "Full-time",
-                    "title": "Software Engineer",
-                    "industry": "Technology",
-                    "salary": 95000
+                    "title": "Architect",
+                    "industry": "Construction",
+                    "salary": 75000
+                },
+                "education": [
+                    {
+                        "level": "Master's",
+                        "fieldOfStudy": "Architecture",
+                        "institution": "Technical University of Berlin",
+                        "yearCompleted": 1999
+                    }
+                ],
+                "response": [
+                    "Yes, I am familiar with business intelligence but I have not used it before",
+                    "Rarely",
+                    7,
+                    "No",
+                    null,
+                    "My company is a bit old-fashioned and hasn't really adopted AI tools yet. We still do most things manually or with older software."
+                ]
+            },
+            {
+                "firstName": "Lena",
+                "lastName": "Petrova",
+                "age": 25,
+                "gender": "Female",
+                "race": "White",
+                "isHispanic": false,
+                "location": {
+                    "country": "Russia",
+                    "city": "Moscow"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Graphic Designer",
+                    "industry": "Design",
+                    "salary": 700000
                 },
                 "education": [
                     {
                         "level": "Bachelor's",
-                        "fieldOfStudy": "Computer Science",
-                        "institution": "University of Waterloo",
-                        "yearCompleted": 2013
+                        "fieldOfStudy": "Graphic Design",
+                        "institution": "Moscow State Stroganov Academy of Industrial and Applied Arts",
+                        "yearCompleted": 2022
                     }
                 ],
-                "responses": [
-                    "Yes, I am very familiar with business intelligence and have used it before",
-                    "Daily",
+                "response": [
+                    "No, I am not familiar with business intelligence",
+                    "Once or twice a month",
+                    7,
+                    "Yes",
+                    ["Automation", "Asking non-technical questions", "Asking technical questions"],
+                    "null"
+                ]
+            },
+            {
+                "firstName": "Kenji",
+                "lastName": "Tanaka",
+                "age": 55,
+                "gender": "Male",
+                "race": "Asian",
+                "isHispanic": false,
+                "location": {
+                    "country": "Japan",
+                    "city": "Kyoto"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Professor of History",
+                    "industry": "Education",
+                    "salary": 8000000
+                },
+                "education": [
+                    {
+                        "level": "Doctorate",
+                        "fieldOfStudy": "History",
+                        "institution": "Kyoto University",
+                        "yearCompleted": 1998
+                    }
+                ],
+                "response": [
+                    "No, I am not familiar with business intelligence",
+                    "Rarely",
+                    5,
+                    "No",
+                    "null",
+                    "My field, history, doesn't really lend itself to AI applications at this point. I rely on traditional research methods."
+                ]
+            },
+            {
+                "firstName": "Sofia",
+                "lastName": "Rossi",
+                "age": 22,
+                "gender": "Female",
+                "race": "White",
+                "isHispanic": false,
+                "location": {
+                    "country": "Italy",
+                    "city": "Rome"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Barista",
+                    "industry": "Food Service",
+                    "salary": 18000
+                },
+                "education": [
+                    {
+                        "level": "High School",
+                        "fieldOfStudy": "General Studies",
+                        "institution": "Liceo Classico Ennio Quirino Visconti",
+                        "yearCompleted": 2020
+                    }
+                ],
+                "response": [
+                    "No, I am not familiar with business intelligence",
+                    "Rarely",
+                    "7",
+                    "No",
+                    "null",
+                    "I don't really see how it would help me make coffee or serve customers better. It seems more for office jobs."
+                ]
+            },
+            {
+                "firstName": "Carlos",
+                "lastName": "Silva",
+                "age": 40,
+                "gender": "Male",
+                "race": "Other",
+                "isHispanic": true,
+                "location": {
+                    "country": "Brazil",
+                    "city": "Rio de Janeiro"
+                },
+                "employment": {
+                    "jobType": "Self-employed",
+                    "title": "Small Business Owner",
+                    "industry": "Retail",
+                    "salary": 60000
+                },
+                "education": [
+                    {
+                        "level": "Some College",
+                        "fieldOfStudy": "Business Administration",
+                        "institution": "Estacio University",
+                        "yearCompleted": 2005
+                    }
+                ],
+                "response": [
+                    "Yes, I am familiar with business intelligence but I have not used it before",
+                    "Rarely",
+                    6,
+                    false,
+                    null,
+                    "I don't see a clear need for it in my retail business right now. It seems too complex or expensive for my operations."
+                ]
+            },
+            {
+                "firstName": "Fatima",
+                "lastName": "Khalid",
+                "age": 29,
+                "gender": "Female",
+                "race": "Other",
+                "isHispanic": false,
+                "location": {
+                    "country": "United Arab Emirates",
+                    "city": "Dubai"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Event Manager",
+                    "industry": "Hospitality",
+                    "salary": 90000
+                },
+                "education": [
+                    {
+                        "level": "Bachelor's",
+                        "fieldOfStudy": "Hospitality Management",
+                        "institution": "Emirates Academy of Hospitality Management",
+                        "yearCompleted": 2016
+                    }
+                ],
+                "response": [
+                    "Yes, I am familiar with business intelligence but I have not used it before",
+                    "Rarely",
+                    7,
+                    true,
+                    ["Automation", "Asking non-technical questions"],
+                    null
+                ]
+            },
+            {
+                "firstName": "Ethan",
+                "lastName": "Wright",
+                "age": 52,
+                "gender": "Male",
+                "race": "Black or African American",
+                "isHispanic": false,
+                "location": {
+                    "country": "United States",
+                    "state": "Georgia",
+                    "city": "Atlanta"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "High School Teacher",
+                    "industry": "Education",
+                    "salary": 65000
+                },
+                "education": [
+                    {
+                        "level": "Master's",
+                        "fieldOfStudy": "Secondary Education",
+                        "institution": "Georgia State University",
+                        "yearCompleted": 1998
+                    }
+                ],
+                "response": [
+                    "No, I am not familiar with business intelligence",
+                    "Once or twice a month",
+                    7,
+                    "No",
+                    null,
+                    "I haven't really seen a need for it in my teaching yet."
+                ]
+            },
+            {
+                "firstName": "Chloe",
+                "lastName": "Dubois",
+                "age": 24,
+                "gender": "Female",
+                "race": "White",
+                "isHispanic": false,
+                "location": {
+                    "country": "France",
+                    "city": "Paris"
+                },
+                "employment": {
+                    "jobType": "Internship",
+                    "title": "Fashion Intern",
+                    "industry": "Fashion",
+                    "salary": 12000
+                },
+                "education": [
+                    {
+                        "level": "Bachelor's",
+                        "fieldOfStudy": "Fashion Design",
+                        "institution": "ESMOD Paris",
+                        "yearCompleted": 2023
+                    }
+                ],
+                "response": [
+                    "No, I am not familiar with business intelligence",
+                    "Once or twice a month",
+                    6,
+                    "No",
+                    null,
+                    "I haven't really seen how it could be useful in my fashion internship, and my company doesn't use it."
+                ]
+            },
+            {
+                "firstName": "Ahmed",
+                "lastName": "Al-Farsi",
+                "age": 38,
+                "gender": "Male",
+                "race": "Other",
+                "isHispanic": false,
+                "location": {
+                    "country": "Saudi Arabia",
+                    "city": "Riyadh"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Civil Engineer",
+                    "industry": "Construction",
+                    "salary": 180000
+                },
+                "education": [
+                    {
+                        "level": "Master's",
+                        "fieldOfStudy": "Civil Engineering",
+                        "institution": "King Fahd University of Petroleum and Minerals",
+                        "yearCompleted": 2010
+                    }
+                ],
+                "response": [
+                    "Yes, I am familiar with business intelligence but I have not used it before",
+                    "Once or twice a month",
+                    "7",
+                    "Yes",
+                    [
+                        "Automation",
+                        "Asking technical questions",
+                        "Asking company-relevant questions"
+                    ],
+                    "null"
+                ]
+            },
+            {
+                "firstName": "Maria",
+                "lastName": "Gonzales",
+                "age": 45,
+                "gender": "Female",
+                "race": "Other",
+                "isHispanic": true,
+                "location": {
+                    "country": "Mexico",
+                    "city": "Mexico City"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Pediatrician",
+                    "industry": "Healthcare",
+                    "salary": 800000
+                },
+                "education": [
+                    {
+                        "level": "Doctorate",
+                        "fieldOfStudy": "Medicine",
+                        "institution": "National Autonomous University of Mexico",
+                        "yearCompleted": 2004
+                    }
+                ],
+                "response": [
+                    "Yes, I am familiar with business intelligence but I have not used it before",
+                    "Rarely",
+                    "8",
+                    "No",
+                    "null",
+                    "null"
+                ]
+            },
+            {
+                "firstName": "Ben",
+                "lastName": "Davis",
+                "age": 31,
+                "gender": "Male",
+                "race": "White",
+                "isHispanic": false,
+                "location": {
+                    "country": "Australia",
+                    "state": "New South Wales",
+                    "city": "Sydney"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Marine Biologist",
+                    "industry": "Science",
+                    "salary": 70000
+                },
+                "education": [
+                    {
+                        "level": "Master's",
+                        "fieldOfStudy": "Marine Biology",
+                        "institution": "University of Sydney",
+                        "yearCompleted": 2016
+                    }
+                ],
+                "response": [
+                    "Yes, I am familiar with business intelligence but I have not used it before",
+                    "Once or twice a month",
+                    7,
+                    "No",
+                    "null",
+                    "I work with living organisms, so AI isn't really applicable to my direct work. I use it for research outside of work sometimes."
+                ]
+            },
+            {
+                "firstName": "Sophie",
+                "lastName": "Schmidt",
+                "age": 27,
+                "gender": "Female",
+                "race": "White",
+                "isHispanic": false,
+                "location": {
+                    "country": "Germany",
+                    "city": "Munich"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Marketing Manager",
+                    "industry": "Automotive",
+                    "salary": 60000
+                },
+                "education": [
+                    {
+                        "level": "Bachelor's",
+                        "fieldOfStudy": "Business Administration",
+                        "institution": "Ludwig Maximilian University of Munich",
+                        "yearCompleted": 2018
+                    }
+                ],
+                "response": [
+                    "Yes, I am familiar with business intelligence but I have not used it before",
+                    "Once or twice a week",
+                    7,
+                    "Yes",
+                    [
+                        "Automation",
+                        "Asking non-technical questions",
+                        "Asking company-relevant questions"
+                    ],
+                    null
+                ]
+            },
+            {
+                "firstName": "Javier",
+                "lastName": "Reyes",
+                "age": 34,
+                "gender": "Male",
+                "race": "White",
+                "isHispanic": true,
+                "location": {
+                    "country": "Spain",
+                    "city": "Madrid"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Chef",
+                    "industry": "Hospitality",
+                    "salary": 45000
+                },
+                "education": [
+                    {
+                        "level": "Vocational / Technical",
+                        "fieldOfStudy": "Culinary Arts",
+                        "institution": "Le Cordon Bleu Madrid",
+                        "yearCompleted": 2010
+                    }
+                ],
+                "response": [
+                    "No, I am not familiar with business intelligence",
+                    "Rarely",
+                    5,
+                    false,
+                    null,
+                    "My work as a chef doesn't really involve AI. I focus on fresh ingredients and traditional cooking methods."
+                ]
+            },
+            {
+                "firstName": "Li",
+                "lastName": "Wei",
+                "age": 41,
+                "gender": "Male",
+                "race": "Asian",
+                "isHispanic": false,
+                "location": {
+                    "country": "China",
+                    "city": "Shanghai"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "University Professor",
+                    "industry": "Education",
+                    "salary": 250000
+                },
+                "education": [
+                    {
+                        "level": "Doctorate",
+                        "fieldOfStudy": "Economics",
+                        "institution": "Peking University",
+                        "yearCompleted": 2008
+                    }
+                ],
+                "response": [
+                    "Yes, I am familiar with business intelligence but I have not used it before",
+                    "Once or twice a month",
                     8,
+                    "Yes",
+                    ["Data science analysis", "Asking technical questions"],
+                    "null"
+                ]
+            },
+            {
+                "firstName": "Olga",
+                "lastName": "Ivanova",
+                "age": 26,
+                "gender": "Female",
+                "race": "White",
+                "isHispanic": false,
+                "location": {
+                    "country": "Russia",
+                    "city": "Saint Petersburg"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Web Developer",
+                    "industry": "Technology",
+                    "salary": 800000
+                },
+                "education": [
+                    {
+                        "level": "Bachelor's",
+                        "fieldOfStudy": "Information Technology",
+                        "institution": "Saint Petersburg Electrotechnical University",
+                        "yearCompleted": 2020
+                    }
+                ],
+                "response": [
+                    "Yes, I am familiar with business intelligence but I have not used it before",
+                    "Daily",
+                    "8",
                     "Yes",
                     ["Automation", "Asking technical questions", "Agentic programming"],
                     null
                 ]
             },
             {
-                "firstName": "Amelia",
-                "lastName": "Chen",
-                "age": 32,
-                "gender": "Female",
+                "firstName": "Daniel",
+                "lastName": "Kim",
+                "age": 33,
+                "gender": "Male",
                 "race": "Asian",
                 "isHispanic": false,
                 "location": {
-                    "country": "Canada",
-                    "state": "Ontario",
-                    "city": "Toronto"
+                    "country": "South Korea",
+                    "city": "Seoul"
                 },
                 "employment": {
                     "jobType": "Full-time",
-                    "title": "Software Engineer",
+                    "title": "Product Manager",
                     "industry": "Technology",
-                    "salary": 95000
+                    "salary": 70000000
                 },
                 "education": [
                     {
-                        "level": "Bachelor's",
-                        "fieldOfStudy": "Computer Science",
-                        "institution": "University of Waterloo",
-                        "yearCompleted": 2013
+                        "level": "Master's",
+                        "fieldOfStudy": "Business Administration",
+                        "institution": "Seoul National University",
+                        "yearCompleted": 2016
                     }
                 ],
-                "responses": [
+                "response": [
                     "Yes, I am very familiar with business intelligence and have used it before",
                     "Daily",
                     8,
                     "Yes",
-                    ["Automation", "Asking technical questions", "Agentic programming"],
+                    ["Data science analysis", "Automation", "Asking technical questions"],
                     null
+                ]
+            },
+            {
+                "firstName": "Ava",
+                "lastName": "Johnson",
+                "age": 20,
+                "gender": "Female",
+                "race": "Black or African American",
+                "isHispanic": false,
+                "location": {
+                    "country": "United States",
+                    "state": "California",
+                    "city": "Los Angeles"
+                },
+                "employment": {
+                    "jobType": "Part-time",
+                    "title": "Retail Associate",
+                    "industry": "Retail",
+                    "salary": 25000
+                },
+                "education": [
+                    {
+                        "level": "Some College",
+                        "fieldOfStudy": "Fashion Merchandising",
+                        "institution": "Santa Monica College",
+                        "yearCompleted": 2024
+                    }
+                ],
+                "response": [
+                    "No, I am not familiar with business intelligence",
+                    "Once or twice a week",
+                    7,
+                    "No",
+                    null,
+                    "My job doesn't really have a need for AI right now. I just help customers and stock shelves, so it's not really something I think about at work."
+                ]
+            },
+            {
+                "firstName": "Ethan",
+                "lastName": "Brown",
+                "age": 58,
+                "gender": "Male",
+                "race": "White",
+                "isHispanic": false,
+                "location": {
+                    "country": "United Kingdom",
+                    "city": "London"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Senior Architect",
+                    "industry": "Architecture",
+                    "salary": 90000
+                },
+                "education": [
+                    {
+                        "level": "Master's",
+                        "fieldOfStudy": "Architecture",
+                        "institution": "University of Cambridge",
+                        "yearCompleted": 1990
+                    }
+                ],
+                "response": [
+                    "Yes, I am familiar with business intelligence but I have not used it before",
+                    "Rarely",
+                    6,
+                    "No",
+                    "null",
+                    "My work often requires precise human judgment and creativity, so AI hasn't found a strong foothold in my daily tasks. Plus, I haven't really been trained on it."
+                ]
+            },
+            {
+                "firstName": "Hiroshi",
+                "lastName": "Sato",
+                "age": 47,
+                "gender": "Male",
+                "race": "Asian",
+                "isHispanic": false,
+                "location": {
+                    "country": "Japan",
+                    "city": "Tokyo"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Marketing Director",
+                    "industry": "Automotive",
+                    "salary": 10000000
+                },
+                "education": [
+                    {
+                        "level": "Bachelor's",
+                        "fieldOfStudy": "Business Administration",
+                        "institution": "Keio University",
+                        "yearCompleted": 1999
+                    }
+                ],
+                "response": [
+                    "Yes, I am very familiar with business intelligence and have used it before",
+                    "Once or twice a week",
+                    "8",
+                    "Yes",
+                    ["Automation", "Data science analysis", "Asking company-relevant questions"],
+                    "null"
+                ]
+            },
+            {
+                "firstName": "Priya",
+                "lastName": "Singh",
+                "age": 30,
+                "gender": "Female",
+                "race": "Asian",
+                "isHispanic": false,
+                "location": {
+                    "country": "India",
+                    "city": "New Delhi"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Journalist",
+                    "industry": "Media",
+                    "salary": 800000
+                },
+                "education": [
+                    {
+                        "level": "Master's",
+                        "fieldOfStudy": "Journalism",
+                        "institution": "Indian Institute of Mass Communication",
+                        "yearCompleted": 2017
+                    }
+                ],
+                "response": [
+                    "Yes, I am familiar with business intelligence but I have not used it before",
+                    "Once or twice a week",
+                    "7",
+                    "Yes",
+                    [
+                        "Asking non-technical questions",
+                        "Asking company-relevant questions",
+                        "Automation"
+                    ],
+                    null
+                ]
+            },
+            {
+                "firstName": "Marcelo",
+                "lastName": "Santos",
+                "age": 39,
+                "gender": "Male",
+                "race": "Other",
+                "isHispanic": true,
+                "location": {
+                    "country": "Brazil",
+                    "city": "São Paulo"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Civil Engineer",
+                    "industry": "Construction",
+                    "salary": 150000
+                },
+                "education": [
+                    {
+                        "level": "Bachelor's",
+                        "fieldOfStudy": "Civil Engineering",
+                        "institution": "University of São Paulo",
+                        "yearCompleted": 2007
+                    }
+                ],
+                "response": [
+                    "Yes, I am familiar with business intelligence but I have not used it before",
+                    "Once or twice a month",
+                    "7",
+                    "No",
+                    "null"
+                ]
+            },
+            {
+                "firstName": "Ayşe",
+                "lastName": "Demir",
+                "age": 28,
+                "gender": "Female",
+                "race": "Other",
+                "isHispanic": false,
+                "location": {
+                    "country": "Turkey",
+                    "city": "Istanbul"
+                },
+                "employment": {
+                    "jobType": "Full-time",
+                    "title": "Architect",
+                    "industry": "Architecture",
+                    "salary": 700000
+                },
+                "education": [
+                    {
+                        "level": "Master's",
+                        "fieldOfStudy": "Architecture",
+                        "institution": "Istanbul Technical University",
+                        "yearCompleted": 2020
+                    }
+                ],
+                "response": [
+                    "Yes, I am familiar with business intelligence but I have not used it before",
+                    "Once or twice a month",
+                    7,
+                    "No",
+                    "null",
+                    "My current role doesn't really involve tasks where AI would be directly applicable. I primarily focus on design and project management."
                 ]
             }
         ]
