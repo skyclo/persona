@@ -17,7 +17,19 @@ import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass"
 import { FXAAShader as fxaaShader } from "three/examples/jsm/shaders/FXAAShader"
 import { DiameterIcon, PauseIcon, PlayIcon, ChevronDown } from "lucide-react"
 
-export default function Globe({ style }: { style?: React.CSSProperties }) {
+type PointLike = { lat: number; lng: number }
+
+export default function Globe({
+    style,
+    points,
+    onMarkerClick,
+    selectedPoint,
+}: {
+    style?: React.CSSProperties
+    points?: PointLike[] | null
+    onMarkerClick?: (p: PointLike | null) => void
+    selectedPoint?: PointLike | null
+}) {
     const mountRef = useRef<HTMLDivElement | null>(null)
     const [rotationSpeed, setRotationSpeed] = useState(0.001)
     const [tempSpeed, setTempSpeed] = useState<number>(0.001) // draft slider value
@@ -36,11 +48,20 @@ export default function Globe({ style }: { style?: React.CSSProperties }) {
     }>({ loaded: false })
     const fpsRef = useRef({ lastTime: performance.now(), frames: 0, fps: 0 })
     const [displayFps, setDisplayFps] = useState<number>(0)
+    const onMarkerClickRef = useRef<((p: PointLike | null) => void) | null>(null)
+    const selectedPointRef = useRef<PointLike | null>(null)
+    const selectedMarkerRef = useRef<any | null>(null)
 
     // keep refs in sync with state
     useEffect(() => {
         rotationSpeedRef.current = rotationSpeed
     }, [rotationSpeed])
+    useEffect(() => {
+        onMarkerClickRef.current = onMarkerClick || null
+    }, [onMarkerClick])
+    useEffect(() => {
+        selectedPointRef.current = selectedPoint || null
+    }, [selectedPoint])
     useEffect(() => {
         isPausedRef.current = isPaused
         autoRotateRef.current = !isPaused
@@ -90,6 +111,10 @@ export default function Globe({ style }: { style?: React.CSSProperties }) {
         })
         const globe = new Mesh(globeGeo, globeMat)
         scene.add(globe)
+
+        // markers group attached to globe so markers rotate with the globe texture
+        const markersGroup = new THREE.Group()
+        globe.add(markersGroup)
 
         // Atmosphere + karman line using shader material with radial/fresnel gradient
         const atmosphereGeo = new SphereGeometry(2.35, 64, 64)
@@ -482,9 +507,13 @@ export default function Globe({ style }: { style?: React.CSSProperties }) {
         // Interaction
         let isDragging = false
         let previousMouseX = 0
+        let pointerDownPos: { x: number; y: number } | null = null
+        let pointerMoved = false
 
         const onPointerDown = (e: PointerEvent) => {
             isDragging = true
+            pointerMoved = false
+            pointerDownPos = { x: e.clientX, y: e.clientY }
             // pause auto-rotation while dragging; preserve paused state in isPausedRef
             autoRotateRef.current = false
             previousMouseX = e.clientX
@@ -501,6 +530,11 @@ export default function Globe({ style }: { style?: React.CSSProperties }) {
         }
         const onPointerMove = (e: PointerEvent) => {
             if (!isDragging) return
+            if (pointerDownPos) {
+                const dx = Math.abs(e.clientX - pointerDownPos.x)
+                const dy = Math.abs(e.clientY - pointerDownPos.y)
+                if (dx > 4 || dy > 4) pointerMoved = true
+            }
             const deltaX = e.clientX - previousMouseX
             previousMouseX = e.clientX
             globe.rotation.y += deltaX * 0.005
@@ -510,6 +544,106 @@ export default function Globe({ style }: { style?: React.CSSProperties }) {
         renderer.domElement.addEventListener("pointerdown", onPointerDown)
         window.addEventListener("pointerup", onPointerUp)
         window.addEventListener("pointermove", onPointerMove)
+
+        // Raycaster for marker clicks
+        const raycaster = new THREE.Raycaster()
+        const mouse = new THREE.Vector2()
+
+        const handleClick = (e: PointerEvent) => {
+            // only treat as click when pointer did not move significantly
+            if (pointerMoved) return
+            if (!mountRef.current) return
+            const rect = renderer.domElement.getBoundingClientRect()
+            const x = ((e.clientX - rect.left) / rect.width) * 2 - 1
+            const y = -((e.clientY - rect.top) / rect.height) * 2 + 1
+            mouse.set(x, y)
+            raycaster.setFromCamera(mouse, camera)
+            const intersects = raycaster.intersectObjects(markersGroup.children, true)
+            if (intersects.length > 0) {
+                const hit = intersects[0].object
+                try {
+                    // simple visual feedback: pulse the marker
+                    const origScale = hit.scale.clone()
+                    hit.scale.setScalar(origScale.x * 1.6)
+                    setTimeout(() => {
+                        try {
+                            hit.scale.copy(origScale)
+                        } catch (e) {}
+                    }, 350)
+                } catch (e) {}
+                // call callback (if provided) and emit a global event with marker data (if present)
+                try {
+                    const detail = (hit as any).userData?.point || null
+                    try {
+                        if (onMarkerClickRef.current) onMarkerClickRef.current(detail)
+                    } catch (e) {}
+                    window.dispatchEvent(new CustomEvent("globe-marker-click", { detail }))
+                } catch (e) {}
+            }
+        }
+
+        renderer.domElement.addEventListener("pointerup", handleClick)
+
+        // helper: convert lat/lon to 3D position on sphere surface
+        function latLngToVector3(lat: number, lon: number, radius = 2.2) {
+            const phi = (90 - lat) * (Math.PI / 180)
+            const theta = (lon + 180) * (Math.PI / 180)
+
+            const x = -radius * Math.sin(phi) * Math.cos(theta)
+            const z = radius * Math.sin(phi) * Math.sin(theta)
+            const y = radius * Math.cos(phi)
+            return new THREE.Vector3(x, y, z)
+        }
+
+        // Create markers if points provided
+        function createMarkersFromPoints(pts?: PointLike[] | null) {
+            // clear existing
+            while (markersGroup.children.length) {
+                const c = markersGroup.children.pop()!
+                try {
+                    if ((c as any).geometry) (c as any).geometry.dispose()
+                    if ((c as any).material) (c as any).material.dispose()
+                } catch (e) {}
+            }
+            if (!pts || pts.length === 0) return
+            for (const p of pts) {
+                const pos = latLngToVector3(p.lat, p.lng, 2.201) // slightly above surface
+                // make the marker a small bright blue sphere (smaller)
+                const dotGeo = new THREE.SphereGeometry(0.045, 12, 12)
+                const dotMat = new THREE.MeshStandardMaterial({
+                    color: 0x0ea5e9,
+                    emissive: new THREE.Color(0x38bdf8),
+                    emissiveIntensity: 1.2,
+                    metalness: 0,
+                    roughness: 0.12,
+                })
+                const dot = new THREE.Mesh(dotGeo, dotMat)
+                dot.position.copy(pos)
+                // orient so the circle faces outward from globe center
+                dot.lookAt(dot.position.clone().multiplyScalar(4))
+                ;(dot as any).userData = { point: p }
+                dot.renderOrder = 150
+                // store base scale for pulsation
+                ;(dot as any).userData.baseScale = dot.scale.clone()
+                // add a faint halo sprite to make the marker visible through atmosphere
+                markersGroup.add(dot)
+            }
+        }
+
+        // initial marker creation
+        createMarkersFromPoints(points)
+
+        // Expose a small updater so React can request marker updates after mount:
+        // call (renderer.domElement as any).__updateGlobePoints(points)
+        ;(renderer.domElement as any).__updateGlobePoints = (pts?: PointLike[] | null) => {
+            try {
+                createMarkersFromPoints(pts)
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        // end of three setup
 
         function onResize() {
             camera.aspect = window.innerWidth / window.innerHeight
@@ -594,6 +728,18 @@ export default function Globe({ style }: { style?: React.CSSProperties }) {
             clearInterval(sunInterval)
         }
     }, [])
+
+    // When `points` prop changes, attempt to call the canvas updater to refresh markers
+    useEffect(() => {
+        try {
+            const container = mountRef.current
+            if (!container) return
+            const canv = container.querySelector("canvas") as any
+            if (canv && typeof canv.__updateGlobePoints === "function") {
+                canv.__updateGlobePoints(points)
+            }
+        } catch (e) {}
+    }, [points])
 
     // Hidden slider UI is rendered in DOM; a small corner thumb expands on hover via CSS
     return (

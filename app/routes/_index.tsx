@@ -29,6 +29,20 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
     const [error, setError] = useState<string | null>(null)
 
+    // normalize result shape: the API may return either an array containing
+    // { results: [...] } objects (legacy/sample), or already return an array
+    // of respondent objects. This helper flattens both shapes to a single
+    // respondents[] array for downstream components.
+    function flattenRespondents(res: any[] | null): any[] {
+        if (!res) return []
+        // if first element has a `results` array, assume wrapped shape
+        if (res.length > 0 && (res[0] as any).results) {
+            return res.map(r => (r as any).results || []).flat()
+        }
+        // otherwise assume it's already an array of respondents
+        return res as any[]
+    }
+
     // Auto-collapse right panel only when a previously-selected respondent is deselected.
     // This prevents the effect from blocking manual toggling when no respondent is selected initially.
     const prevSelectedRef = useRef<number | null>(selectedIndex)
@@ -105,7 +119,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <div className="flex h-full max-h-screen min-h-screen w-full flex-col overflow-hidden bg-black text-white">
             <Navbar
                 args={{
-                    numberPersonas: 5,
+                    numberPersonas: 25,
                     industry: "anything",
                     region: "worldwide",
                     age: { low: 18, high: 60 },
@@ -119,7 +133,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
             {/* main content: split left and right */}
             <main className="flex flex-1">
-                {/* left column: split top (globe) and bottom (bottom panel) */}
                 <div className="flex flex-1 flex-col">
                     {/* top: globe fills available left column space */}
                     <div className="flex flex-1 items-center justify-center p-6">
@@ -129,6 +142,35 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                                     transform: rightCollapsed
                                         ? "translateX(0)"
                                         : `translateX(-${RIGHT_PANEL_WIDTH / 2}px)`,
+                                }}
+                                points={(() => {
+                                    const respondents = flattenRespondents(result)
+                                    return respondents.length
+                                        ? respondents.map((r: any) => r.point).filter(Boolean)
+                                        : undefined
+                                })()}
+                                selectedPoint={((): any | null => {
+                                    const respondents = flattenRespondents(result)
+                                    if (selectedIndex == null) return null
+                                    const r = respondents[selectedIndex]
+                                    return r?.point ?? null
+                                })()}
+                                onMarkerClick={p => {
+                                    try {
+                                        if (!p) return
+                                        const respondents = flattenRespondents(result)
+                                        const idx = respondents.findIndex((r: any) => {
+                                            if (!r || !r.point) return false
+                                            return (
+                                                Number(r.point.lat) === Number(p.lat) &&
+                                                Number(r.point.lng) === Number(p.lng)
+                                            )
+                                        })
+                                        if (idx >= 0) {
+                                            setSelectedIndex(idx)
+                                            setRightCollapsed(false)
+                                        }
+                                    } catch (e) {}
                                 }}
                             />
                         </div>
