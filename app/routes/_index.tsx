@@ -179,7 +179,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                 </div>
                 {/* right column: toggle + optional panel */}
                 <div
-                    className="mt-14 mr-4 mb-2 flex"
+                    className="mt-14 mr-4 mb-2 ml-0 flex"
                     style={{
                         width: rightCollapsed
                             ? RIGHT_PANEL_COLLAPSED_WIDTH + 12

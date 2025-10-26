@@ -110,7 +110,6 @@ function questionBreakdown(data: any[], questions: any[] | undefined) {
             const median = quantile(0.5)
 
             stats = { mean, median, range, q1, q3, count: values.length }
-            console.log(stats)
         }
 
         const totalResponses =

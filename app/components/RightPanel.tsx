@@ -29,7 +29,7 @@ export default function RightPanel({
         Array.isArray(data) && data.length > 0 && typeof selectedIndex === "number"
             ? (data[selectedIndex] ?? null)
             : null
-    console.log(questions)
+
     return (
         <aside
             className={`flex h-full max-h-[calc(100vh-3.5rem)] flex-col overflow-auto rounded-2xl border border-[rgba(255,255,255,0.04)] bg-[rgba(10,18,35,0.6)] text-white shadow-lg backdrop-blur ${collapsed ? "items-center p-3" : "p-4"}`}
@@ -145,8 +145,6 @@ export default function RightPanel({
                                                         rawAnswer.trim() === "")
                                                         ? null
                                                         : rawAnswer
-
-                                                console.log(resp, idx, rawAnswer, answer)
 
                                                 return (
                                                     <div
