@@ -102,7 +102,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     ]
 
     return (
-        <div className="flex min-h-screen w-full flex-col overflow-hidden bg-black text-white">
+        <div className="flex h-full max-h-screen min-h-screen w-full flex-col overflow-hidden bg-black text-white">
             <Navbar
                 args={{
                     numberPersonas: 5,
@@ -118,16 +118,22 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             />
 
             {/* main content: split left and right */}
-            <main className="mt-14 flex flex-1">
+            <main className="flex flex-1">
                 {/* left column: split top (globe) and bottom (bottom panel) */}
                 <div className="flex flex-1 flex-col">
                     {/* top: globe fills available left column space */}
                     <div className="flex flex-1 items-center justify-center p-6">
                         <div className="h-full w-full max-w-none">
-                            <Globe />
+                            <Globe
+                                style={{
+                                    transform: rightCollapsed
+                                        ? "translateX(0)"
+                                        : `translateX(-${RIGHT_PANEL_WIDTH / 2}px)`,
+                                }}
+                            />
                         </div>
                     </div>
-
+                    <div className="mt-14 w-full"></div>
                     {/* bottom: bottom panel area (rendered inline only when expanded) */}
                     {!bottomCollapsed ? (
                         <div className="px-6 pb-6">
@@ -171,10 +177,9 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                         />
                     )}
                 </div>
-
                 {/* right column: toggle + optional panel */}
                 <div
-                    className="flex"
+                    className="mt-14 mr-4 mb-2 flex"
                     style={{
                         width: rightCollapsed
                             ? RIGHT_PANEL_COLLAPSED_WIDTH + 12
@@ -210,6 +215,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                                 data={result ?? undefined}
                                 selectedIndex={selectedIndex ?? undefined}
                                 onDeselect={() => setSelectedIndex(null)}
+                                questions={QUESTIONS}
                             />
                         </div>
                     )}

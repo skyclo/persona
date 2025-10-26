@@ -1,5 +1,5 @@
 import React, { useMemo } from "react"
-import { Users, BarChart2 } from "lucide-react"
+import { Users, BarChart2, Briefcase, Activity } from "lucide-react"
 
 type Props = {
     collapsed?: boolean
@@ -42,6 +42,18 @@ function aggregateData(data: any[]) {
     }
 }
 
+function formatAnswerForDisplay(ans: any) {
+    // normalize boolean-like strings to capitalized True/False
+    if (typeof ans === "boolean") return ans ? "True" : "False"
+    if (typeof ans === "string") {
+        const low = ans.trim().toLowerCase()
+        if (low === "true") return "True"
+        if (low === "false") return "False"
+        return ans
+    }
+    return String(ans)
+}
+
 function questionBreakdown(data: any[], questions: any[] | undefined) {
     if (!questions || !Array.isArray(questions)) return []
     return questions.map((q, qi) => {
@@ -81,18 +93,30 @@ function questionBreakdown(data: any[], questions: any[] | undefined) {
             const sorted = [...values].sort((a, b) => a - b)
             const sum = values.reduce((a, b) => a + b, 0)
             const mean = sum / values.length
-            const median =
-                sorted.length % 2 === 1
-                    ? sorted[(sorted.length - 1) / 2]
-                    : (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2
             const range = { min: sorted[0], max: sorted[sorted.length - 1] }
-            stats = { mean, median, range, count: values.length }
+
+            let quantile = (p: number) => {
+                const pos = (sorted.length - 1) * p
+                const base = Math.floor(pos)
+                const rest = pos - base
+                if (sorted[base + 1] !== undefined) {
+                    return sorted[base] + rest * (sorted[base + 1] - sorted[base])
+                } else {
+                    return sorted[base]
+                }
+            }
+            const q1 = quantile(0.24)
+            const q3 = quantile(0.75)
+            const median = quantile(0.5)
+
+            stats = { mean, median, range, q1, q3, count: values.length }
+            console.log(stats)
         }
 
         const totalResponses =
             Object.values(counts).reduce((a, b) => a + b, 0) + (stats ? stats.count : 0)
 
-        return { question: q.content ?? `Q${qi + 1}`, counts, stats, totalResponses }
+        return { question: q.content ?? `Q${qi + 1}`, counts, stats, totalResponses, type: q.type }
     })
 }
 
@@ -152,7 +176,10 @@ export default function BottomPanel({
                         </div>
 
                         <div className="rounded-lg bg-[rgba(255,255,255,0.02)] p-4">
-                            <div className="text-sm text-gray-300">Top Industries</div>
+                            <div className="flex items-center gap-2 text-gray-300">
+                                <Briefcase className="text-sky-300" />
+                                <div className="text-sm">Top Industries</div>
+                            </div>
                             {summary ? (
                                 <div className="mt-2 space-y-2 text-sm text-gray-200">
                                     {summary.topIndustries.map(([name, count]: any) => (
@@ -170,7 +197,10 @@ export default function BottomPanel({
                         </div>
 
                         <div className="col-span-2 rounded-lg bg-[rgba(255,255,255,0.02)] p-4">
-                            <div className="text-sm text-gray-300">Top Job Titles</div>
+                            <div className="flex items-center gap-2 text-gray-300">
+                                <Activity className="text-sky-300" />
+                                <div className="text-sm">Top Job Titles</div>
+                            </div>
                             {summary ? (
                                 <div className="mt-2 flex flex-wrap gap-2 text-sm text-gray-200">
                                     {summary.topTitles.map(([name, count]: any) => (
@@ -210,23 +240,156 @@ export default function BottomPanel({
                                     </div>
 
                                     {b.stats ? (
-                                        <div className="mt-2 text-xs text-gray-200">
-                                            <div>
-                                                <strong>Mean:</strong> {b.stats.mean.toFixed(2)}
+                                        <div className="mt-2 flex items-center gap-9 text-xs text-gray-200">
+                                            <div className="w-48 pl-4">
+                                                <div className="w-full">
+                                                    <strong>Mean:</strong> {b.stats.mean.toFixed(2)}
+                                                </div>
+                                                <div className="w-full">
+                                                    <strong>Median:</strong> {b.stats.median}
+                                                </div>
+                                                <div className="w-full">
+                                                    <strong>Range:</strong> {b.stats.range.min} -{" "}
+                                                    {b.stats.range.max}
+                                                </div>
                                             </div>
-                                            <div>
-                                                <strong>Median:</strong> {b.stats.median}
-                                            </div>
-                                            <div>
-                                                <strong>Range:</strong> {b.stats.range.min} -{" "}
-                                                {b.stats.range.max}
+
+                                            {/* Box-and-whisker chart */}
+                                            <div className="w-full flex-1">
+                                                <svg
+                                                    width="100%"
+                                                    height="40"
+                                                    viewBox="0 0 160 40"
+                                                    preserveAspectRatio="xMinYMid meet"
+                                                    aria-hidden>
+                                                    {/* horizontal axis padding */}
+                                                    <defs>
+                                                        <linearGradient id={`g-${i}`} x1="0" x2="1">
+                                                            <stop offset="0%" stopColor="#38bdf8" />
+                                                            <stop
+                                                                offset="100%"
+                                                                stopColor="#06b6d4"
+                                                            />
+                                                        </linearGradient>
+                                                    </defs>
+                                                    {(() => {
+                                                        const min = b.stats.range.min
+                                                        const max = b.stats.range.max
+                                                        const q1 = b.stats.q1 ?? min
+                                                        const q3 = b.stats.q3 ?? max
+                                                        const pad = 8
+                                                        const w = 160 - pad * 2
+                                                        const scale = (v: number) =>
+                                                            pad +
+                                                            ((v - min) / Math.max(1, max - min)) * w
+
+                                                        const xMin = scale(min)
+                                                        const xQ1 = scale(q1)
+                                                        const xMed = scale(b.stats.median)
+                                                        const xQ3 = scale(q3)
+                                                        const xMax = scale(max)
+
+                                                        return (
+                                                            <g>
+                                                                {/* whiskers (near-white stroke for maximum contrast) */}
+                                                                <line
+                                                                    x1={xMin}
+                                                                    y1={20}
+                                                                    x2={xQ1}
+                                                                    y2={20}
+                                                                    stroke="rgba(255,255,255,0.95)"
+                                                                    strokeWidth="3"
+                                                                />
+                                                                <line
+                                                                    x1={xQ3}
+                                                                    y1={20}
+                                                                    x2={xMax}
+                                                                    y2={20}
+                                                                    stroke="rgba(255,255,255,0.95)"
+                                                                    strokeWidth="3"
+                                                                />
+
+                                                                {/* box (light fill, brighter cyan stroke) */}
+                                                                <rect
+                                                                    x={xQ1}
+                                                                    y={10}
+                                                                    width={Math.max(2, xQ3 - xQ1)}
+                                                                    height={20}
+                                                                    fill={`url(#g-${i})`}
+                                                                    fillOpacity={0.15}
+                                                                    stroke="rgba(56,189,248,0.36)"
+                                                                    strokeWidth={1.5}
+                                                                />
+
+                                                                {/* median (bright) */}
+                                                                <line
+                                                                    x1={xMed}
+                                                                    y1={10}
+                                                                    x2={xMed}
+                                                                    y2={30}
+                                                                    stroke="#38bdf8"
+                                                                    strokeWidth="3"
+                                                                />
+
+                                                                {/* min/max caps (bright cyan) */}
+                                                                <line
+                                                                    x1={xMin}
+                                                                    y1={14}
+                                                                    x2={xMin}
+                                                                    y2={26}
+                                                                    stroke="#7dd3fc"
+                                                                    strokeWidth="3"
+                                                                />
+                                                                <line
+                                                                    x1={xMax}
+                                                                    y1={14}
+                                                                    x2={xMax}
+                                                                    y2={26}
+                                                                    stroke="#7dd3fc"
+                                                                    strokeWidth="3"
+                                                                />
+                                                            </g>
+                                                        )
+                                                    })()}
+                                                </svg>
                                             </div>
                                         </div>
                                     ) : (
                                         <div className="mt-2 space-y-2">
-                                            {Object.entries(b.counts).map(
-                                                ([ans, cnt], choiceIdx) => {
-                                                    // convert 0->A, 1->B, etc.
+                                            {(() => {
+                                                const entries = Object.entries(b.counts)
+                                                // if short/long response, show only first 3 items
+                                                const isTextResp =
+                                                    b.type === "short_response" ||
+                                                    b.type === "long_response"
+                                                if (isTextResp) {
+                                                    const first = entries.slice(0, 3)
+                                                    const remaining = Math.max(
+                                                        0,
+                                                        entries.length - first.length
+                                                    )
+                                                    return (
+                                                        <div className="space-y-2">
+                                                            {first.map(([ans, cnt], idx) => (
+                                                                <div key={ans} className="pl-4">
+                                                                    <div className="truncate text-sm text-gray-200">
+                                                                        {formatAnswerForDisplay(
+                                                                            ans
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                            {remaining > 0 && (
+                                                                <div className="pl-4 text-xs text-gray-400 italic">
+                                                                    ...{remaining} more responses
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )
+                                                }
+
+                                                // default rendering for choice counts
+                                                return entries.map(([ans, cnt], choiceIdx) => {
                                                     const letter = String.fromCharCode(
                                                         65 + (choiceIdx % 26)
                                                     )
@@ -238,7 +401,7 @@ export default function BottomPanel({
                                                                 {letter}.
                                                             </div>
                                                             <div className="w-40 truncate text-sm text-gray-200">
-                                                                {ans}
+                                                                {formatAnswerForDisplay(ans)}
                                                             </div>
                                                             <div className="h-3 flex-1 overflow-hidden rounded bg-[rgba(255,255,255,0.03)]">
                                                                 <div
@@ -261,8 +424,8 @@ export default function BottomPanel({
                                                             </div>
                                                         </div>
                                                     )
-                                                }
-                                            )}
+                                                })
+                                            })()}
                                         </div>
                                     )}
                                 </section>

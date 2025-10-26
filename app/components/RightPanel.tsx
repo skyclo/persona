@@ -29,13 +29,12 @@ export default function RightPanel({
         Array.isArray(data) && data.length > 0 && typeof selectedIndex === "number"
             ? (data[selectedIndex] ?? null)
             : null
-
+    console.log(questions)
     return (
         <aside
-            className={`flex h-full flex-col overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.04)] bg-[rgba(10,18,35,0.6)] text-white shadow-lg backdrop-blur ${collapsed ? "items-center py-3" : "p-4"}`}
+            className={`flex h-full max-h-[calc(100vh-3.5rem)] flex-col overflow-auto rounded-2xl border border-[rgba(255,255,255,0.04)] bg-[rgba(10,18,35,0.6)] text-white shadow-lg backdrop-blur ${collapsed ? "items-center p-3" : "p-4"}`}
             style={{
                 width: panelWidth,
-                padding: collapsed ? 8 : 16,
                 transition: "width 300ms ease, padding 300ms ease, opacity 200ms ease",
             }}>
             {collapsed ? (
@@ -63,13 +62,13 @@ export default function RightPanel({
                     <section className="mt-4 flex-1 overflow-auto text-sm text-gray-200 transition-all duration-300">
                         {respondent ? (
                             <div className="space-y-3">
-                                <div className="flex items-center justify-end">
+                                {/* <div className="flex items-center justify-end">
                                     <button
                                         onClick={() => onDeselect && onDeselect()}
                                         className="rounded bg-[rgba(255,255,255,0.03)] px-2 py-1 text-xs text-gray-300 hover:bg-[rgba(255,255,255,0.05)]">
                                         Deselect
                                     </button>
-                                </div>
+                                </div> */}
 
                                 <div className="grid grid-cols-2 gap-3">
                                     <IndividualDemographicCard
@@ -127,19 +126,18 @@ export default function RightPanel({
                                     />
                                 </div>
 
+                                {/* thin divider between demographics and responses */}
+                                <div className="my-4 h-px w-full bg-[rgba(255,255,255,0.03)]" />
+
                                 {/* Raw response preview removed by request */}
 
-                                <div className="pt-4">
+                                <div className="pt-0">
                                     <h4 className="text-sm font-medium text-sky-200">Responses</h4>
-                                    <div className="mt-2 space-y-2 text-sm text-gray-200">
+                                    <div className="mt-2 space-y-2 pr-4 text-sm text-gray-200">
                                         {questions && Array.isArray(questions) ? (
                                             questions.map((q, idx) => {
-                                                const resp =
-                                                    respondent.response?.json ??
-                                                    respondent.response ??
-                                                    {}
-                                                const rawAnswer =
-                                                    resp[idx] ?? resp[q.content] ?? null
+                                                const resp = respondent.response ?? {}
+                                                const rawAnswer = resp[idx] ?? null
                                                 const answer =
                                                     rawAnswer === null ||
                                                     rawAnswer === "null" ||
@@ -147,6 +145,8 @@ export default function RightPanel({
                                                         rawAnswer.trim() === "")
                                                         ? null
                                                         : rawAnswer
+
+                                                console.log(resp, idx, rawAnswer, answer)
 
                                                 return (
                                                     <div

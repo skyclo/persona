@@ -17,7 +17,7 @@ import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass"
 import { FXAAShader as fxaaShader } from "three/examples/jsm/shaders/FXAAShader"
 import { DiameterIcon, PauseIcon, PlayIcon, ChevronDown } from "lucide-react"
 
-export default function Globe() {
+export default function Globe({ style }: { style?: React.CSSProperties }) {
     const mountRef = useRef<HTMLDivElement | null>(null)
     const [rotationSpeed, setRotationSpeed] = useState(0.001)
     const [tempSpeed, setTempSpeed] = useState<number>(0.001) // draft slider value
@@ -66,8 +66,8 @@ export default function Globe() {
         const scene = new Scene()
         scene.background = new Color(0x000000)
 
-        const camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000)
-        camera.position.z = 8.5 // move back to accommodate larger globe
+        const camera = new PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 1000)
+        camera.position.z = 4 // move back to accommodate larger globe
 
         const renderer = new WebGLRenderer({ antialias: true, alpha: true })
         renderer.setSize(window.innerWidth, window.innerHeight)
@@ -597,7 +597,7 @@ export default function Globe() {
 
     // Hidden slider UI is rendered in DOM; a small corner thumb expands on hover via CSS
     return (
-        <div className="three-canvas relative h-full w-full">
+        <div className="three-canvas relative h-full w-full" style={style}>
             <div ref={mountRef} className="absolute inset-0" />
             <div className="rotation-slider group fixed top-16 left-4 z-50">
                 <div className="slider-handle flex h-8 w-8 items-center justify-center rounded-sm bg-gray-900 text-xs text-white opacity-90 ring-1 ring-gray-600">
