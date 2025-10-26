@@ -28,7 +28,6 @@ export default function Navbar({
         }
     }, [fetcher.data])
 
-    console.log(result || error)
     return (
         <nav className="absolute top-0 z-40 flex h-14 w-full items-center border-b border-[rgba(255,255,255,0.03)] bg-[rgba(0,0,0,0.4)] px-6 backdrop-blur-sm">
             <div className="flex items-center gap-4">

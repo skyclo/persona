@@ -85,7 +85,7 @@ export default function Globe() {
             metalness: 0.1,
             roughness: 0.78,
             transparent: true,
-            opacity: 0.9,
+            opacity: 1,
             alphaTest: 0.02,
         })
         const globe = new Mesh(globeGeo, globeMat)

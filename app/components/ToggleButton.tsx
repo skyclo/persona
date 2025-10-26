@@ -37,7 +37,7 @@ export default function ToggleButton({
             aria-expanded={expanded}
             onClick={onClick}
             style={style}
-            className={`z-50 m-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded bg-gray-800 text-white shadow-md ring-1 ring-white/10 hover:bg-sky-500 ${extraClass}`}>
+            className={`relative z-50 m-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded bg-gray-800 text-white shadow-md ring-1 ring-white/10 hover:bg-sky-500 ${extraClass}`}>
             <ChevronDown size={size} className={`transform ${rotClass}`} />
         </button>
     )
