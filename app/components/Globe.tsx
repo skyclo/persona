@@ -15,7 +15,7 @@ import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass"
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass"
 // @ts-ignore: example module without types
 import { FXAAShader as fxaaShader } from "three/examples/jsm/shaders/FXAAShader"
-import { DiameterIcon } from "lucide-react"
+import { DiameterIcon, PauseIcon, PlayIcon, ChevronDown } from "lucide-react"
 
 export default function Globe() {
     const mountRef = useRef<HTMLDivElement | null>(null)
@@ -67,7 +67,7 @@ export default function Globe() {
         scene.background = new Color(0x000000)
 
         const camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000)
-        camera.position.z = 7 // move back to accommodate larger globe
+        camera.position.z = 8.5 // move back to accommodate larger globe
 
         const renderer = new WebGLRenderer({ antialias: true, alpha: true })
         renderer.setSize(window.innerWidth, window.innerHeight)
@@ -77,7 +77,7 @@ export default function Globe() {
         container.appendChild(renderer.domElement)
 
         // Globe
-        const globeGeo = new SphereGeometry(1.6, 64, 64) // larger globe
+        const globeGeo = new SphereGeometry(2.2, 64, 64) // larger globe
         // allow PNG alpha so ocean/background transparency shows through the atmosphere
         // make slightly translucent so the atmosphere/haze blends with the texture
         const globeMat = new MeshStandardMaterial({
@@ -92,7 +92,7 @@ export default function Globe() {
         scene.add(globe)
 
         // Atmosphere + karman line using shader material with radial/fresnel gradient
-        const atmosphereGeo = new SphereGeometry(1.7, 64, 64)
+        const atmosphereGeo = new SphereGeometry(2.35, 64, 64)
         const atmosphereMat = new THREE.ShaderMaterial({
             transparent: true,
             depthWrite: false,
@@ -111,7 +111,7 @@ export default function Globe() {
         scene.add(atmosphere)
 
         // Karman line as a slightly larger thin sphere with stronger intensity (will be outlined)
-        const karmanLineGeo = new SphereGeometry(1.72, 64, 64)
+        const karmanLineGeo = new SphereGeometry(2.38, 64, 64)
         const karmanLineMat = new THREE.ShaderMaterial({
             transparent: true,
             depthWrite: false,
@@ -601,7 +601,7 @@ export default function Globe() {
             <div ref={mountRef} className="absolute inset-0" />
             <div className="rotation-slider group fixed top-16 left-4 z-50">
                 <div className="slider-handle flex h-8 w-8 items-center justify-center rounded-sm bg-gray-900 text-xs text-white opacity-90 ring-1 ring-gray-600">
-                    ▼
+                    <ChevronDown width={12} height={12} />
                 </div>
                 <div className="mt-2 hidden items-center rounded bg-gray-900/60 p-2 group-hover:flex">
                     <button
@@ -614,26 +614,12 @@ export default function Globe() {
                                 return next
                             })
                         }}
-                        className="mr-2 flex h-8 w-8 items-center justify-center rounded bg-gray-800 text-white">
+                        className="mr-2 flex h-8 w-8 cursor-pointer items-center justify-center rounded bg-gray-800 text-white">
                         {/* pause vs play icon */}
                         {!isPaused ? (
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                width="16"
-                                height="16"
-                                fill="currentColor">
-                                <path d="M6 4h4v16H6zM14 4h4v16h-4z" />
-                            </svg>
+                            <PauseIcon width={16} height={16} />
                         ) : (
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                width="16"
-                                height="16"
-                                fill="currentColor">
-                                <path d="M8 5v14l11-7z" />
-                            </svg>
+                            <PlayIcon width={16} height={16} />
                         )}
                     </button>
                     <button
@@ -650,7 +636,7 @@ export default function Globe() {
                                 return next
                             })
                         }}
-                        className="mr-2 flex h-8 w-8 items-center justify-center rounded bg-gray-800 text-white"
+                        className="mr-2 flex h-8 w-8 cursor-pointer items-center justify-center rounded bg-gray-800 text-white"
                         title="Toggle debug overlay and sun ray">
                         <DiameterIcon width={16} height={16} />
                     </button>

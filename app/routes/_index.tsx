@@ -1,0 +1,215 @@
+import type { Route } from "./+types/_index"
+import Navbar from "~/components/Navbar"
+import Globe from "~/components/Globe"
+import RightPanel from "~/components/RightPanel"
+import BottomPanel from "~/components/BottomPanel"
+import { useState } from "react"
+import ToggleButton from "~/components/ToggleButton"
+
+export function meta({}: Route.MetaArgs) {
+    return [
+        { title: "Persona - Survey" },
+        { name: "description", content: "Survey visualization and responses" },
+    ]
+}
+
+export function loader({ context }: Route.LoaderArgs) {
+    // Use a declared env var from wrangler.jsonc; return it for the UI to consume if needed
+    return { message: context.cloudflare.env.N8N_WEBHOOK_URL }
+}
+
+export default function Home({ loaderData }: Route.ComponentProps) {
+    // layout constants (px)
+    const RIGHT_PANEL_WIDTH = 480 // increased width in px
+    const RIGHT_PANEL_COLLAPSED_WIDTH = 56
+
+    const [rightCollapsed, setRightCollapsed] = useState(false)
+    const [bottomCollapsed, setBottomCollapsed] = useState(false)
+    const [result, setResult] = useState<JSON[] | null>(null)
+    const [error, setError] = useState<string | null>(null)
+
+    return (
+        <div className="flex min-h-screen w-full flex-col overflow-hidden bg-black text-white">
+            <Navbar
+                args={{
+                    numberPersonas: 5,
+                    industry: "anything",
+                    region: "worldwide",
+                    age: { low: 18, high: 60 },
+                }}
+                questions={[
+                    {
+                        required: true,
+                        type: "multiple",
+                        content: "Have you heard of the term business intelligence (BI) before?",
+                        maxSelection: 1,
+                        choices: [
+                            "Yes, I am very familiar with business intelligence and have used it before",
+                            "Yes, I am familiar with business intelligence but I have not used it before",
+                            "No, I am not familiar with business intelligence",
+                        ],
+                    },
+                    {
+                        required: true,
+                        type: "multiple",
+                        content: "How often do you use AI?",
+                        maxSelection: 1,
+                        choices: [
+                            "Daily",
+                            "Once or twice a week",
+                            "Once or twice a month",
+                            "Rarely",
+                            "I have never used AI",
+                        ],
+                    },
+                    {
+                        required: true,
+                        type: "scale",
+                        content:
+                            "On a scale of 1-10, how favorable of an opinion do you have on AI?",
+                        maxSelection: 1,
+                        min: "1",
+                        max: "10",
+                    },
+                    {
+                        required: true,
+                        type: "multiple",
+                        content: "Do you use AI at work?",
+                        maxSelection: 1,
+                        choices: ["Yes", "No"],
+                    },
+                    {
+                        required: false,
+                        type: "multiple",
+                        content:
+                            "If you answered YES to the previous question, what are the top 3 things you use it for?",
+                        maxSelection: 3,
+                        choices: [
+                            "Automation",
+                            "Vibe coding",
+                            "Data science analysis",
+                            "Asking non-technical questions",
+                            "Asking technical questions",
+                            "Asking company-relevant questions",
+                            "Agentic programming",
+                        ],
+                    },
+                    {
+                        required: false,
+                        type: "short_response",
+                        content:
+                            "If you answered NO to the prior question, why do you NOT use AI at work?",
+                        maxChars: 140,
+                    },
+                ]}
+                result={result}
+                setResult={setResult}
+                error={error}
+                setError={setError}
+            />
+
+            {/* main content: split left and right */}
+            <main className="mt-14 flex flex-1">
+                {/* left column: split top (globe) and bottom (bottom panel) */}
+                <div className="flex flex-1 flex-col">
+                    {/* top: globe fills available left column space */}
+                    <div className="flex flex-1 items-center justify-center p-6">
+                        <div className="h-full w-full max-w-none">
+                            <Globe />
+                        </div>
+                    </div>
+
+                    {/* bottom: bottom panel area (rendered inline only when expanded) */}
+                    {!bottomCollapsed ? (
+                        <div className="px-6 pb-6">
+                            <div className="flex justify-center">
+                                <ToggleButton
+                                    ariaLabel="toggle-bottom-panel"
+                                    title={
+                                        bottomCollapsed
+                                            ? "Expand bottom panel"
+                                            : "Collapse bottom panel"
+                                    }
+                                    expanded={!bottomCollapsed}
+                                    onClick={() => setBottomCollapsed(v => !v)}
+                                    direction={bottomCollapsed ? "up" : "down"}
+                                />
+                            </div>
+
+                            <BottomPanel collapsed={false} />
+                        </div>
+                    ) : (
+                        <ToggleButton
+                            ariaLabel="toggle-bottom-panel"
+                            title="Expand bottom panel"
+                            expanded={!bottomCollapsed}
+                            onClick={() => setBottomCollapsed(v => !v)}
+                            direction="up"
+                            style={{
+                                position: "fixed",
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                                bottom: 8,
+                            }}
+                        />
+                    )}
+                </div>
+
+                {/* right column: toggle column + right panel. spans full height automatically */}
+                <div
+                    className="flex"
+                    style={{
+                        width: rightCollapsed
+                            ? RIGHT_PANEL_COLLAPSED_WIDTH + 12
+                            : RIGHT_PANEL_WIDTH + 12,
+                    }}>
+                    {/* inline toggle column and panel when expanded */}
+                    {!rightCollapsed ? (
+                        <>
+                            <div className="flex items-center justify-center">
+                                <ToggleButton
+                                    ariaLabel="toggle-right-panel"
+                                    title={
+                                        rightCollapsed
+                                            ? "Expand right panel"
+                                            : "Collapse right panel"
+                                    }
+                                    expanded={!rightCollapsed}
+                                    onClick={() => setRightCollapsed(v => !v)}
+                                    direction={rightCollapsed ? "right" : "left"}
+                                />
+                            </div>
+
+                            {/* right panel container */}
+                            <div className="h-full" style={{ width: RIGHT_PANEL_WIDTH }}>
+                                <RightPanel
+                                    collapsed={false}
+                                    width={RIGHT_PANEL_WIDTH}
+                                    collapsedWidth={RIGHT_PANEL_COLLAPSED_WIDTH}
+                                />
+                            </div>
+                        </>
+                    ) : (
+                        /* when collapsed: don't render the panel container; render a fixed flush-to-edge toggle below */
+                        <>
+                            <div style={{ width: 0 }} />
+                            <ToggleButton
+                                ariaLabel="toggle-right-panel"
+                                title="Expand right panel"
+                                expanded={!rightCollapsed}
+                                onClick={() => setRightCollapsed(v => !v)}
+                                direction="right"
+                                style={{
+                                    position: "fixed",
+                                    right: 8,
+                                    top: "50%",
+                                    transform: "translateY(-50%)",
+                                }}
+                            />
+                        </>
+                    )}
+                </div>
+            </main>
+        </div>
+    )
+}
